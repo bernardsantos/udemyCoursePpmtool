@@ -14,4 +14,7 @@ import io.project.ppmtool.domain.Project;
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long> {
 
+    Project findByProjectName(String projectName);
+    Project findByProjectIdentifier(String identifier);
+
 }
