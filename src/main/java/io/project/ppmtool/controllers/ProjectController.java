@@ -3,6 +3,8 @@
  */
 package io.project.ppmtool.controllers;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +34,20 @@ public class ProjectController {
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
     
-    @PostMapping("/project")
+    @PostMapping("/projects")
     public ResponseEntity<?> save(@Valid @RequestBody Project project, BindingResult result) {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if (errorMap != null) return errorMap;
         return new ResponseEntity<Project>(projectService.save(project), HttpStatus.CREATED);
     }
     
-    @GetMapping("/project/{identifier}")
+    @GetMapping("/projects/{identifier}")
     public ResponseEntity<?> getProjectById(@PathVariable String identifier) throws Exception {
         return new ResponseEntity<Project>(projectService.getProjectByIdentifier(identifier), HttpStatus.OK);
+    }
+    
+    @GetMapping("/projects")
+    public ResponseEntity<?> getList() throws Exception {
+        return new ResponseEntity<Map<String, Object>>(projectService.getList(), HttpStatus.OK);
     }
 }

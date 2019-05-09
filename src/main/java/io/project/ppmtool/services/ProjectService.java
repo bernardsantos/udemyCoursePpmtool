@@ -4,6 +4,11 @@
 package io.project.ppmtool.services;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +29,7 @@ public class ProjectService {
     public Project save(Project project) { 
         Project pj = projectRepository.findByProjectName(project.getProjectName());
         if (pj != null) {
-            throw new CustomException(" already exist!", 10);
+            throw new CustomException(pj.getProjectName()+" already exist!", 10);
         } else {
             pj = new Project();
             pj.setProjectName(project.getProjectName());
@@ -41,6 +46,13 @@ public class ProjectService {
             throw new CustomException("project with identifier "+identifier+" does not exist", 10);
         }
         return project;
-        
+    }
+    
+    public Map<String, Object> getList() throws Exception {
+        Map<String, Object> response = new HashMap<>();
+        List<Project> projects = new ArrayList<>();
+        projects = (List<Project>) projectRepository.findAll();
+        response.put("data", projects);
+        return response;
     }
 }
