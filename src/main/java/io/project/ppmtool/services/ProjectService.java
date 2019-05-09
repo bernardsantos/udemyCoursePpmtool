@@ -29,7 +29,7 @@ public class ProjectService {
     public Project save(Project project) { 
         Project pj = projectRepository.findByProjectName(project.getProjectName());
         if (pj != null) {
-            throw new CustomException(pj.getProjectName()+" already exist!", 10);
+            throw new CustomException("Project name "+pj.getProjectName()+" already exist!", 10);
         } else {
             pj = new Project();
             pj.setProjectName(project.getProjectName());
@@ -55,4 +55,12 @@ public class ProjectService {
         response.put("data", projects);
         return response;
     }
+    
+    public void deleteProjectByIdentifier(String identifier) {
+        Project project = projectRepository.findByProjectIdentifier(identifier);
+        if(project == null) {
+            throw new CustomException("Project with identifier "+identifier+ " does not exist!", 10);
+        }
+        projectRepository.delete(project);
+    } 
 }
