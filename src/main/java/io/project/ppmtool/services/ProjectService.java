@@ -63,4 +63,22 @@ public class ProjectService {
         }
         projectRepository.delete(project);
     } 
+    
+    public Project updateProject(Project proj, String identifier) throws Exception {
+        
+        Project project = projectRepository.findByProjectIdentifier(identifier);
+        if (project == null) {
+            throw new CustomException("Project with Identifier "+identifier+" does not exist", 10);
+        }
+        Boolean exist = projectRepository.findByProjectNameAndIdNot(proj.getProjectName(), project.getId()) != null;
+        if (exist == true) {
+            throw new CustomException("Project with projectName "+proj.getProjectName()+" already exist!", 10);
+        } 
+        project.setProjectName(proj.getProjectName());
+        project.setProjectIdentifier(proj.getProjectIdentifier());
+        project.setDescription(proj.getDescription());
+        project.setStart_date(proj.getStart_date() != null ? proj.getStart_date() : null);
+        project.setEnd_date(proj.getEnd_date() != null ? proj.getEnd_date() : null);
+       return projectRepository.save(project);
+    }
 }
