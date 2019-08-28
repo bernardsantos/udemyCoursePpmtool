@@ -9,14 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.project.ppmtool.domain.Project;
 import io.project.ppmtool.exceptions.CustomException;
 import io.project.ppmtool.repositories.ProjectRepository;
-
 /**
  * @author Bernard A. Santos Jr.  12 Apr 2019
  */
@@ -26,6 +24,7 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
     
+    
     public Project save(Project project) { 
         Project pj = projectRepository.findByProjectName(project.getProjectName());
         if (pj != null) {
@@ -34,7 +33,9 @@ public class ProjectService {
             pj = new Project();
             pj.setProjectName(project.getProjectName());
             pj.setDescription(project.getDescription());
-            pj.setProjectIdentifier(RandomStringUtils.randomAlphanumeric(6).toUpperCase());
+            pj.setProjectIdentifier(project.getProjectIdentifier());
+            pj.setStart_date(project.getStart_date());
+            pj.setEnd_date(project.getEnd_date());
         }
        
         return projectRepository.save(pj);

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class ProjectController {
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
     
+    @CrossOrigin
     @PostMapping("/projects")
     public ResponseEntity<?> save(@Valid @RequestBody Project project, BindingResult result) {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
@@ -44,16 +46,19 @@ public class ProjectController {
         return new ResponseEntity<Project>(projectService.save(project), HttpStatus.CREATED);
     }
     
+    @CrossOrigin
     @GetMapping("/projects/{identifier}")
     public ResponseEntity<?> getProjectById(@PathVariable String identifier) throws Exception {
         return new ResponseEntity<Project>(projectService.getProjectByIdentifier(identifier), HttpStatus.OK);
     }
     
+    @CrossOrigin
     @GetMapping("/projects")
     public ResponseEntity<?> getProjectList() throws Exception {
         return new ResponseEntity<Map<String, Object>>(projectService.getList(), HttpStatus.OK);
     }
     
+    @CrossOrigin
     @DeleteMapping("/projects/{identifier}")
     public ResponseEntity<?> deleteProject(@PathVariable String identifier) {
         projectService.deleteProjectByIdentifier(identifier);
@@ -62,6 +67,7 @@ public class ProjectController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
     
+    @CrossOrigin
     @PutMapping("/projects/{identifier}")
     public ResponseEntity<?> updateProject(@Valid @RequestBody Project project, BindingResult result, @PathVariable String identifier) throws Exception {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
