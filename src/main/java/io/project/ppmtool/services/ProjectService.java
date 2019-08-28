@@ -9,14 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.project.ppmtool.domain.Project;
 import io.project.ppmtool.exceptions.CustomException;
 import io.project.ppmtool.repositories.ProjectRepository;
-
 /**
  * @author Bernard A. Santos Jr.  12 Apr 2019
  */
@@ -26,6 +24,7 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
     
+    
     public Project save(Project project) { 
         Project pj = projectRepository.findByProjectName(project.getProjectName());
         if (pj != null) {
@@ -34,7 +33,9 @@ public class ProjectService {
             pj = new Project();
             pj.setProjectName(project.getProjectName());
             pj.setDescription(project.getDescription());
-            pj.setProjectIdentifier(RandomStringUtils.randomAlphanumeric(6).toUpperCase());
+            pj.setProjectIdentifier(project.getProjectIdentifier());
+            pj.setStart_date(project.getStart_date());
+            pj.setEnd_date(project.getEnd_date());
         }
        
         return projectRepository.save(pj);
@@ -63,4 +64,22 @@ public class ProjectService {
         }
         projectRepository.delete(project);
     } 
+    
+    public Project updateProject(Project proj, String identifier) throws Exception {
+        
+        Project project = projectRepository.findByProjectIdentifier(identifier);
+        if (project == null) {
+            throw new CustomException("Project with Identifier "+identifier+" does not exist", 10);
+        }
+        Boolean exist = projectRepository.findByProjectNameAndIdNot(proj.getProjectName(), project.getId()) != null;
+        if (exist == true) {
+            throw new CustomException("Project with projectName "+proj.getProjectName()+" already exist!", 10);
+        } 
+        project.setProjectName(proj.getProjectName());
+        project.setProjectIdentifier(proj.getProjectIdentifier());
+        project.setDescription(proj.getDescription());
+        project.setStart_date(proj.getStart_date() != null ? proj.getStart_date() : null);
+        project.setEnd_date(proj.getEnd_date() != null ? proj.getEnd_date() : null);
+       return projectRepository.save(project);
+    }
 }

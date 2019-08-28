@@ -10,36 +10,41 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
 
 @Entity
 @Data
+@Table(name = "project")
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message="Project name is required!")
+    @Column(name = "project_name")
     private String projectName;
-    @Column(updatable=false, unique=true)
+    
+    @NotBlank(message="Project identifier is required!")
+    @Column(name="project_identifier", updatable=false, unique=true)
+    @Size(min = 6, max = 6, message="must be 6 characters")
     private String projectIdentifier;
+    
     @Lob
     @NotBlank(message="Project Description is required!")
+    @Column(name="description")
     private String description;
     
-    @JsonFormat(pattern="yyyy-MM-dd@HH:mm:ss.SSSZ")
+    @NotNull(message="Start date is required!")
     private Date start_date;
-    @JsonFormat(pattern="yyyy-MM-dd@HH:mm:ss.SSSZ")
+    @NotNull(message="End date is required!")
     private Date end_date;
     
-    
-    @JsonFormat(pattern="yyyy-MM-dd@HH:mm:ss.SSSZ")
     private Date created_at;
-    @JsonFormat(pattern="yyyy-MM-dd@HH:mm:ss.SSSZ")
     private Date updated_at;
 
     public Project() {
@@ -54,5 +59,4 @@ public class Project {
     protected void onUpdate() {
         this.updated_at = new Date();
     }
-
 }
